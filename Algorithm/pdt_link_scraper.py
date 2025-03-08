@@ -36,11 +36,18 @@ categories = [
 def setup_driver():
     """Initializes and returns a headless Chrome WebDriver."""
     options = Options()
-    options.add_argument("--headless")  # Run in headless mode
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+     # 🛠 Fixes for headless mode
+    options.add_argument("--headless=new")  # Use new headless mode
+    options.add_argument("--disable-gpu")  # Fixes WebGL errors
+    options.add_argument("--disable-software-rasterizer")  # Avoids rendering issues
+    options.add_argument("--disable-dev-shm-usage")  # Fixes crashes in Docker/Linux
+    options.add_argument("--no-sandbox")  # Required for some systems
+    options.add_argument("--enable-javascript")  # Ensures JavaScript execution
 
+    # 🏆 Important: Set User-Agent (Avoid bot detection)
+    options.add_argument(
+        "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    )
     service = Service(CHROMEDRIVER_PATH)
     driver = webdriver.Chrome(service=service, options=options)
     
