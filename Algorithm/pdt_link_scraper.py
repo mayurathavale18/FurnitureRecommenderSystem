@@ -12,6 +12,7 @@ from time import sleep
 from random import randint
 from pathlib import Path
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 logging.basicConfig(format='%(asctime)s - %(filename)s - %(message)s', level=logging.INFO)
 
@@ -25,6 +26,14 @@ categories = ['living-room-packages', 'sofas', 'loveseats', 'sectionals', 'chair
 
 
 def main():
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")  # Required for some Windows setups
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    
+    # Initialize the Chrome driver with options
+    driver = webdriver.Chrome(options=chrome_options)
     for k, j in enumerate(categories):
         cat = j
         cat_links = []
@@ -39,8 +48,8 @@ def main():
             logging.info('Start offset {}'.format(offset))
             # TODO: selenium depreation warning
             link = 'https://www.furniture.ca/collections/furniture-living-room-' + cat + '?offset=' + str(offset)
-            driver = webdriver.PhantomJS(
-                executable_path='/usr/local/lib/node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs')
+            # driver = webdriver.PhantomJS(
+            #     executable_path='/usr/local/lib/node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs')
             rdm = randint(10, 36)
             driver.get(link)
             page = BeautifulSoup(driver.page_source, 'html.parser')
