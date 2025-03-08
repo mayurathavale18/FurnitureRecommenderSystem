@@ -1,6 +1,5 @@
 from flask import render_template, request, Blueprint
 from imageRecommender.models import Galleryimages
-import tkinter as tk
 
 main = Blueprint('main', __name__)
 
@@ -8,12 +7,8 @@ main = Blueprint('main', __name__)
 @main.route("/home")
 def home():
     page = request.args.get('page', 1, type=int)
-    root = tk.Tk()
-    screen_width = root.winfo_screenheight()
-    if screen_width > 1024:
-        page_number = 21
-    else:
-        page_number = 8
+    # Set default page size since we don't have tkinter
+    page_number = 12  # A reasonable middle ground
     gImages = Galleryimages.query.paginate(page=page, per_page=page_number)
     return render_template('home.html', images = gImages)
 
